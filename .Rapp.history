@@ -1,0 +1,760 @@
+300*0.7
+210-56*1.5
+126-60
+3.99*2
+4310/190000
+4000/80000
+895/26365
+12*6
+631.88+2400
+631.88+2400-3205
+18.53/30
+30.49/50
+88 600/89000
+88600/89000
+2.49*10.63
+113-84
+54.1+17.1+7.90.9385
+54.1+17.1+7.9+0.9385
+15951-4324.66-0.24
+11646+4305
+11646+4305-5574.39
+2787.62+1803.75+1966.04
+2026.48+1492.18+1612.48
+2026.48+1492.18+(1612.48/2)
+2787.62+1803.75+(1966.04/2)
+2250*3+1966.04+1803.75+27.87.62
+(2250*3)+1966.04+1803.75+27.87.62
+2250*3
+2250*3+1966.04+1803.75+2787.62
+OASDI<-172.83
+Medi<-40.42
+OASDI<-172.83+111.83
+Medi<-40.42+26.15
+OASDI<-172.83+111.83+121.9
+Medi<-40.42+26.15+28.51
+OASDI
+Medi
+OASDI<-172.83+111.83+121.9
+OASDI<-172.83+111.83+121.9+139.5
+Medi<-40.42+26.15+28.51+32.63
+OASDI<-172.83+111.83+121.9+139.5+137.61
+Medi<-40.42+26.15+28.51+32.63+32.18
+OASDI<-172.83+111.83+121.9+139.5+137.61+139.5
+Medi<-40.42+26.15+28.51+32.63+32.18+32.63
+OASDI
+Medi
+OASDI+Medi
+13307.41-11646.41
+11646/13246
+### Cornell earning In OHIO Gross Income was: 5574.39
+11646.41-5574.39
+11646.41-5574.39+4305.02
+1966.04/2
+6557.41-983.02
+80105-10377
+10377/80105
+10377/69728
+10377+5574
+10377+5574/80105
+(10377+5574)/80105
+10377+5574
+15951*0.059
+94/118
+94/119
+119-94
+32-13
+121-94
+42.48/124
+39.97/116
+39.97+31.17
+(39.97*1.08+31.17)
+(39.97*1.08+31.17)/232
+31.17/116
+48/360
+55/360
+134-109
+(1/8)0.05
+(1/8)*0.05
+3.5*5
+3.5*5*6
+3.5*5*6/7
+3*5
+3*5*6/7
+3.5*6
+3.5*6*6/7
+20000/0.06
+1-1/0.45
+1-(1/0.45)
+(1/0.45)-1
+1/(1+0.57)
+1/(1+5.67)
+Ve=(1/0.45-1)
+Ve
+1/(1+1.22)
+46582/12
+0.1*1000
+0.06*1000
+4153/7
+4+19
+4+19/3
+fruits <- c(#
+  "apples and oranges and pears and bananas",#
+  "pineapples and mangos and guavas"#
+)#
+#
+str_split(fruits, " and ")#
+str_split(fruits, " and ", simplify = TRUE)#
+#
+# Specify n to restrict the number of possible matches#
+str_split(fruits, " and ", n = 3)#
+str_split(fruits, " and ", n = 2)#
+# If n greater than number of pieces, no padding occurs#
+str_split(fruits, " and ", n = 5)#
+#
+# Use fixed to return a character matrix#
+str_split_fixed(fruits, " and ", 3)#
+str_split_fixed(fruits, " and ", 4)
+install.packages("stringr")
+library(stringr)
+fruits <- c(#
+  "apples and oranges and pears and bananas",#
+  "pineapples and mangos and guavas"#
+)
+str_split(fruits, " and ")#
+str_split(fruits, " and ", simplify = TRUE)
+str_split(fruits, " and ", n = 3)#
+str_split(fruits, " and ", n = 2)
+str_split(fruits, " and ", n = 5)
+str_split_fixed(fruits, " and ", 3)
+str_split_fixed(fruits, " and ", 4)
+str(str_split_fixed(fruits, " and ", 4))
+dim(str_split_fixed(fruits, " and ", 4))
+48+11.3+4.125+9.32+14.76+5
+150
+50/0.5
+runOneRep <- function(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60){#
+  founderPop<-runMacs2(nInd=nInd,nChr=nChr,segSites=segSites,Ne=Ne,bp=bp,genLen=1,inbred=TRUE,ploidy=Sporo_ploidy, returnCommand = FALSE, nThreads = NULL)#
+  # Founder Pop should be here#
+  SP<-SimParam$new(founderPop)#
+  SP$addTraitA(nQtlPerChr=nQtlPerChr, mean=mean_Trait,var=var_Trait,corA=NULL)#
+  SP$addSnpChip(nSnpPerChr=nSnpPerChr)#
+  SP$setGender("yes_sys")#
+  SP$setTrackRec(TRUE)#
+  pop <- newPop(founderPop, simParam=SP)#
+  pop<-setPheno(pop,varE=varE,simParam=SP)#
+  genMean=meanG(pop)#
+  generation<- vector(length=(cycles+1),mode="list")#
+  generation[[1]]<-pop   ### cycle 0, founder pop#
+  GP0_DH<-makeDH(generation[[1]],nDH=nDH0,simParam=SP)  ### Twice GPs available for making SPs	#
+  GP0_DH_all<-pullQtlGeno(GP0_DH,simParam=SP)	#
+  dim(GP0_DH_all)#
+  GS<-NULL#
+  GEBV<-NULL#
+  Sporo<-NULL#
+  Sporo_s<-NULL#
+  GP_DH<-NULL#
+  for (j in 1:cycles){ #
+    if (j<=2){#
+      ## Year 2, the same scheme as in Year 1#
+      ## Randomly select 200 as female, then randomly select another 200 as male#
+      females<-selectInd(pop=GP0_DH,gender="F",nInd=n_gp,trait=1,use="rand",simParam=SP)#
+      males<-selectInd(pop=GP0_DH,gender="M",nInd=n_gp,trait=1,use="rand",simParam=SP)	#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]	  					 #
+      GP_M_2<-GP_M[sample(length(GP_M))] 					 #
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create 400 Spj#
+      Spj<-makeCross(GP0_DH,crossPlan=crossPlan,simParam=SP)#
+      Spj<-setPheno(Spj,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Spj)  ### This is a list now#
+      ## Select amongst Spj#
+      #Spj_s<-Sel(Sporo[[j]])#
+      Spj_s<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Spj_s)#
+      ## Make GP DH using Sporo_s#
+      GP_DHj<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)	### !!!#
+      GP_DH<-c(GP_DH,GP_DHj)#
+      print(j)#
+    } else if (j>2) {#
+      print (j)#
+      TP_j<-mergePops(Sporo)  #
+      GS_j<-RRBLUP(TP_j,traits=1,simParam=SP)  ### TP only has info from 1:(j-1)#
+      ## GEBVs on GP(y-2)s#
+      GEBV_j<-setEBV(GP_DH[[j-1]],GS_j,simParam=SP)  ### Use the GP_DH 1 years ago#
+      females<-selectInd(pop=GEBV_j,gender="F",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      males<-selectInd(pop=GEBV_j,gender="M",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]#
+      GP_M_2<-GP_M[sample(length(GP_M))]#
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create Sporo_j#
+      Sporo_j<-makeCross(GEBV_j,crossPlan=crossPlan,simParam=SP)#
+      Sporo_j<-setPheno(Sporo_j,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Sporo_j)#
+      ## Select amongst Sporoy #
+      Sporo_js<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Sporo_js)#
+      ## Make GP_DH_j using Sporo_s#
+      GP_DH_j<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)#
+      GP_DH<-c(GP_DH,GP_DH_j)#
+      print(j)   #
+    }#
+    mean_g1<-unlist(lapply(Sporo,meanG))#
+    sd_g1<-sqrt(unlist(lapply(Sporo,varG)))#
+  }      #
+  return(list(mean_g1=mean_g1, sd_g1=sd_g1))#
+}#END runOneRep
+cycles=3
+runOneRep <- function(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60){#
+  founderPop<-runMacs2(nInd=nInd,nChr=nChr,segSites=segSites,Ne=Ne,bp=bp,genLen=1,inbred=TRUE,ploidy=Sporo_ploidy, returnCommand = FALSE, nThreads = NULL)#
+  # Founder Pop should be here#
+  SP<-SimParam$new(founderPop)#
+  SP$addTraitA(nQtlPerChr=nQtlPerChr, mean=mean_Trait,var=var_Trait,corA=NULL)#
+  SP$addSnpChip(nSnpPerChr=nSnpPerChr)#
+  SP$setGender("yes_sys")#
+  SP$setTrackRec(TRUE)#
+  pop <- newPop(founderPop, simParam=SP)#
+  pop<-setPheno(pop,varE=varE,simParam=SP)#
+  genMean=meanG(pop)#
+  generation<- vector(length=(cycles+1),mode="list")#
+  generation[[1]]<-pop   ### cycle 0, founder pop#
+  GP0_DH<-makeDH(generation[[1]],nDH=nDH0,simParam=SP)  ### Twice GPs available for making SPs	#
+  GP0_DH_all<-pullQtlGeno(GP0_DH,simParam=SP)	#
+  dim(GP0_DH_all)#
+  GS<-NULL#
+  GEBV<-NULL#
+  Sporo<-NULL#
+  Sporo_s<-NULL#
+  GP_DH<-NULL#
+  for (j in 1:cycles){ #
+    if (j<=2){#
+      ## Year 2, the same scheme as in Year 1#
+      ## Randomly select 200 as female, then randomly select another 200 as male#
+      females<-selectInd(pop=GP0_DH,gender="F",nInd=n_gp,trait=1,use="rand",simParam=SP)#
+      males<-selectInd(pop=GP0_DH,gender="M",nInd=n_gp,trait=1,use="rand",simParam=SP)	#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]	  					 #
+      GP_M_2<-GP_M[sample(length(GP_M))] 					 #
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create 400 Spj#
+      Spj<-makeCross(GP0_DH,crossPlan=crossPlan,simParam=SP)#
+      Spj<-setPheno(Spj,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Spj)  ### This is a list now#
+      ## Select amongst Spj#
+      #Spj_s<-Sel(Sporo[[j]])#
+      Spj_s<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Spj_s)#
+      ## Make GP DH using Sporo_s#
+      GP_DHj<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)	### !!!#
+      GP_DH<-c(GP_DH,GP_DHj)#
+      print(j)#
+    } else if (j>2) {#
+      print (j)#
+      TP_j<-mergePops(Sporo)  #
+      GS_j<-RRBLUP(TP_j,traits=1,simParam=SP)  ### TP only has info from 1:(j-1)#
+      ## GEBVs on GP(y-2)s#
+      GEBV_j<-setEBV(GP_DH[[j-1]],GS_j,simParam=SP)  ### Use the GP_DH 1 years ago#
+      females<-selectInd(pop=GEBV_j,gender="F",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      males<-selectInd(pop=GEBV_j,gender="M",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]#
+      GP_M_2<-GP_M[sample(length(GP_M))]#
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create Sporo_j#
+      Sporo_j<-makeCross(GEBV_j,crossPlan=crossPlan,simParam=SP)#
+      Sporo_j<-setPheno(Sporo_j,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Sporo_j)#
+      ## Select amongst Sporoy #
+      Sporo_js<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Sporo_js)#
+      ## Make GP_DH_j using Sporo_s#
+      GP_DH_j<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)#
+      GP_DH<-c(GP_DH,GP_DH_j)#
+      print(j)   #
+    }#
+    mean_g1<-unlist(lapply(Sporo,meanG))#
+    sd_g1<-sqrt(unlist(lapply(Sporo,varG)))#
+  }      #
+  return(list(mean_g1=mean_g1, sd_g1=sd_g1))#
+}#END runOneRep
+head(mean_g1)
+rm(list=ls())
+runOneRep <- function(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60){#
+  founderPop<-runMacs2(nInd=nInd,nChr=nChr,segSites=segSites,Ne=Ne,bp=bp,genLen=1,inbred=TRUE,ploidy=Sporo_ploidy, returnCommand = FALSE, nThreads = NULL)#
+  # Founder Pop should be here#
+  SP<-SimParam$new(founderPop)#
+  SP$addTraitA(nQtlPerChr=nQtlPerChr, mean=mean_Trait,var=var_Trait,corA=NULL)#
+  SP$addSnpChip(nSnpPerChr=nSnpPerChr)#
+  SP$setGender("yes_sys")#
+  SP$setTrackRec(TRUE)#
+  pop <- newPop(founderPop, simParam=SP)#
+  pop<-setPheno(pop,varE=varE,simParam=SP)#
+  genMean=meanG(pop)#
+  generation<- vector(length=(cycles+1),mode="list")#
+  generation[[1]]<-pop   ### cycle 0, founder pop#
+  GP0_DH<-makeDH(generation[[1]],nDH=nDH0,simParam=SP)  ### Twice GPs available for making SPs	#
+  GP0_DH_all<-pullQtlGeno(GP0_DH,simParam=SP)	#
+  dim(GP0_DH_all)#
+  GS<-NULL#
+  GEBV<-NULL#
+  Sporo<-NULL#
+  Sporo_s<-NULL#
+  GP_DH<-NULL#
+  for (j in 1:cycles){ #
+    if (j<=2){#
+      ## Year 2, the same scheme as in Year 1#
+      ## Randomly select 200 as female, then randomly select another 200 as male#
+      females<-selectInd(pop=GP0_DH,gender="F",nInd=n_gp,trait=1,use="rand",simParam=SP)#
+      males<-selectInd(pop=GP0_DH,gender="M",nInd=n_gp,trait=1,use="rand",simParam=SP)	#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]	  					 #
+      GP_M_2<-GP_M[sample(length(GP_M))] 					 #
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create 400 Spj#
+      Spj<-makeCross(GP0_DH,crossPlan=crossPlan,simParam=SP)#
+      Spj<-setPheno(Spj,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Spj)  ### This is a list now#
+      ## Select amongst Spj#
+      #Spj_s<-Sel(Sporo[[j]])#
+      Spj_s<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Spj_s)#
+      ## Make GP DH using Sporo_s#
+      GP_DHj<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)	### !!!#
+      GP_DH<-c(GP_DH,GP_DHj)#
+      print(j)#
+    } else if (j>2) {#
+      print (j)#
+      TP_j<-mergePops(Sporo)  #
+      GS_j<-RRBLUP(TP_j,traits=1,simParam=SP)  ### TP only has info from 1:(j-1)#
+      ## GEBVs on GP(y-2)s#
+      GEBV_j<-setEBV(GP_DH[[j-1]],GS_j,simParam=SP)  ### Use the GP_DH 1 years ago#
+      females<-selectInd(pop=GEBV_j,gender="F",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      males<-selectInd(pop=GEBV_j,gender="M",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]#
+      GP_M_2<-GP_M[sample(length(GP_M))]#
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create Sporo_j#
+      Sporo_j<-makeCross(GEBV_j,crossPlan=crossPlan,simParam=SP)#
+      Sporo_j<-setPheno(Sporo_j,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Sporo_j)#
+      ## Select amongst Sporoy #
+      Sporo_js<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Sporo_js)#
+      ## Make GP_DH_j using Sporo_s#
+      GP_DH_j<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)#
+      GP_DH<-c(GP_DH,GP_DH_j)#
+      print(j)   #
+    }#
+    mean_g1<-unlist(lapply(Sporo,meanG))#
+    sd_g1<-sqrt(unlist(lapply(Sporo,varG)))#
+  }      #
+  return(list(mean_g1=mean_g1, sd_g1=sd_g1))#
+}#END runOneRep
+cycles=3
+runOneRep(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60)
+library(AlphasimR)
+library(AlphaSimR)#
+          n_gp<-nPheno/2#
+          ## Define: Reps and Cycles#
+          #nrep<-nrep  ## 100 Use shiny to render#
+          #cycles <-cycles ## 5#
+          #varE<-varE          # 5.67!!! This is starting H=0.33,  Try another H to represent Dry matter vs Wet biomass (0.15)#
+          #nDH<-nDH          # 25!!! Or 96#
+          #Ne=Ne       # Historical effective population size, estimated via E(r2)=1/(1+4*Ne*c)  ## If Ne=600, Pop str will inflat it#
+          nInd<-1000   # Number of founders#
+          nChr<-31    # Number of chr#
+          segSites<-500   # Number of segregating sites per chromosome#
+          Sporo_ploidy<-2L   # Ploidy#
+          bp<-1e+08       # Base pair length of chromosome#
+          genLen=1        # Genetic length of chromosome in Morgans#
+          nSnpPerChr<-100  # Number of SNP per chromosome#
+          nQtlPerChr<-100  # Number of QTL per chromosome#
+          mean_Trait<-0    # Trait mean#
+          var_Trait<-1     # Trait variance#
+          nDH0<-2
+runOneRep <- function(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60){#
+  founderPop<-runMacs2(nInd=nInd,nChr=nChr,segSites=segSites,Ne=Ne,bp=bp,genLen=1,inbred=TRUE,ploidy=Sporo_ploidy, returnCommand = FALSE, nThreads = NULL)#
+  # Founder Pop should be here#
+  SP<-SimParam$new(founderPop)#
+  SP$addTraitA(nQtlPerChr=nQtlPerChr, mean=mean_Trait,var=var_Trait,corA=NULL)#
+  SP$addSnpChip(nSnpPerChr=nSnpPerChr)#
+  SP$setGender("yes_sys")#
+  SP$setTrackRec(TRUE)#
+  pop <- newPop(founderPop, simParam=SP)#
+  pop<-setPheno(pop,varE=varE,simParam=SP)#
+  genMean=meanG(pop)#
+  generation<- vector(length=(cycles+1),mode="list")#
+  generation[[1]]<-pop   ### cycle 0, founder pop#
+  GP0_DH<-makeDH(generation[[1]],nDH=nDH0,simParam=SP)  ### Twice GPs available for making SPs	#
+  GP0_DH_all<-pullQtlGeno(GP0_DH,simParam=SP)	#
+  dim(GP0_DH_all)#
+  GS<-NULL#
+  GEBV<-NULL#
+  Sporo<-NULL#
+  Sporo_s<-NULL#
+  GP_DH<-NULL#
+  for (j in 1:cycles){ #
+    if (j<=2){#
+      ## Year 2, the same scheme as in Year 1#
+      ## Randomly select 200 as female, then randomly select another 200 as male#
+      females<-selectInd(pop=GP0_DH,gender="F",nInd=n_gp,trait=1,use="rand",simParam=SP)#
+      males<-selectInd(pop=GP0_DH,gender="M",nInd=n_gp,trait=1,use="rand",simParam=SP)	#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]	  					 #
+      GP_M_2<-GP_M[sample(length(GP_M))] 					 #
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create 400 Spj#
+      Spj<-makeCross(GP0_DH,crossPlan=crossPlan,simParam=SP)#
+      Spj<-setPheno(Spj,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Spj)  ### This is a list now#
+      ## Select amongst Spj#
+      #Spj_s<-Sel(Sporo[[j]])#
+      Spj_s<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Spj_s)#
+      ## Make GP DH using Sporo_s#
+      GP_DHj<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)	### !!!#
+      GP_DH<-c(GP_DH,GP_DHj)#
+      print(j)#
+    } else if (j>2) {#
+      print (j)#
+      TP_j<-mergePops(Sporo)  #
+      GS_j<-RRBLUP(TP_j,traits=1,simParam=SP)  ### TP only has info from 1:(j-1)#
+      ## GEBVs on GP(y-2)s#
+      GEBV_j<-setEBV(GP_DH[[j-1]],GS_j,simParam=SP)  ### Use the GP_DH 1 years ago#
+      females<-selectInd(pop=GEBV_j,gender="F",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      males<-selectInd(pop=GEBV_j,gender="M",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]#
+      GP_M_2<-GP_M[sample(length(GP_M))]#
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create Sporo_j#
+      Sporo_j<-makeCross(GEBV_j,crossPlan=crossPlan,simParam=SP)#
+      Sporo_j<-setPheno(Sporo_j,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Sporo_j)#
+      ## Select amongst Sporoy #
+      Sporo_js<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Sporo_js)#
+      ## Make GP_DH_j using Sporo_s#
+      GP_DH_j<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)#
+      GP_DH<-c(GP_DH,GP_DH_j)#
+      print(j)   #
+    }#
+    mean_g1<-unlist(lapply(Sporo,meanG))#
+    sd_g1<-sqrt(unlist(lapply(Sporo,varG)))#
+  }      #
+  return(list(mean_g1=mean_g1, sd_g1=sd_g1))#
+}#END runOneRep
+cycles=3
+runOneRep(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60)
+runOneRep <- function(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60){#
+	          n_gp<-nPheno/2#
+  founderPop<-runMacs2(nInd=nInd,nChr=nChr,segSites=segSites,Ne=Ne,bp=bp,genLen=1,inbred=TRUE,ploidy=Sporo_ploidy, returnCommand = FALSE, nThreads = NULL)#
+  # Founder Pop should be here#
+  SP<-SimParam$new(founderPop)#
+  SP$addTraitA(nQtlPerChr=nQtlPerChr, mean=mean_Trait,var=var_Trait,corA=NULL)#
+  SP$addSnpChip(nSnpPerChr=nSnpPerChr)#
+  SP$setGender("yes_sys")#
+  SP$setTrackRec(TRUE)#
+  pop <- newPop(founderPop, simParam=SP)#
+  pop<-setPheno(pop,varE=varE,simParam=SP)#
+  genMean=meanG(pop)#
+  generation<- vector(length=(cycles+1),mode="list")#
+  generation[[1]]<-pop   ### cycle 0, founder pop#
+  GP0_DH<-makeDH(generation[[1]],nDH=nDH0,simParam=SP)  ### Twice GPs available for making SPs	#
+  GP0_DH_all<-pullQtlGeno(GP0_DH,simParam=SP)	#
+  dim(GP0_DH_all)#
+  GS<-NULL#
+  GEBV<-NULL#
+  Sporo<-NULL#
+  Sporo_s<-NULL#
+  GP_DH<-NULL#
+  for (j in 1:cycles){ #
+    if (j<=2){#
+      ## Year 2, the same scheme as in Year 1#
+      ## Randomly select 200 as female, then randomly select another 200 as male#
+      females<-selectInd(pop=GP0_DH,gender="F",nInd=n_gp,trait=1,use="rand",simParam=SP)#
+      males<-selectInd(pop=GP0_DH,gender="M",nInd=n_gp,trait=1,use="rand",simParam=SP)	#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]	  					 #
+      GP_M_2<-GP_M[sample(length(GP_M))] 					 #
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create 400 Spj#
+      Spj<-makeCross(GP0_DH,crossPlan=crossPlan,simParam=SP)#
+      Spj<-setPheno(Spj,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Spj)  ### This is a list now#
+      ## Select amongst Spj#
+      #Spj_s<-Sel(Sporo[[j]])#
+      Spj_s<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Spj_s)#
+      ## Make GP DH using Sporo_s#
+      GP_DHj<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)	### !!!#
+      GP_DH<-c(GP_DH,GP_DHj)#
+      print(j)#
+    } else if (j>2) {#
+      print (j)#
+      TP_j<-mergePops(Sporo)  #
+      GS_j<-RRBLUP(TP_j,traits=1,simParam=SP)  ### TP only has info from 1:(j-1)#
+      ## GEBVs on GP(y-2)s#
+      GEBV_j<-setEBV(GP_DH[[j-1]],GS_j,simParam=SP)  ### Use the GP_DH 1 years ago#
+      females<-selectInd(pop=GEBV_j,gender="F",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      males<-selectInd(pop=GEBV_j,gender="M",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]#
+      GP_M_2<-GP_M[sample(length(GP_M))]#
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create Sporo_j#
+      Sporo_j<-makeCross(GEBV_j,crossPlan=crossPlan,simParam=SP)#
+      Sporo_j<-setPheno(Sporo_j,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Sporo_j)#
+      ## Select amongst Sporoy #
+      Sporo_js<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Sporo_js)#
+      ## Make GP_DH_j using Sporo_s#
+      GP_DH_j<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)#
+      GP_DH<-c(GP_DH,GP_DH_j)#
+      print(j)   #
+    }#
+    mean_g1<-unlist(lapply(Sporo,meanG))#
+    sd_g1<-sqrt(unlist(lapply(Sporo,varG)))#
+  }      #
+  return(list(mean_g1=mean_g1, sd_g1=sd_g1))#
+}#END runOneRep#
+cycles=3#
+#
+runOneRep(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60)
+cycles=7#
+#
+runOneRep(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60)
+x<-c(1:7)
+y<-mean_g1
+y<-c(0.06357895,-0.01200846,1.07884894,2.14746253,3.19468572,3.89922688,4.56755678)
+plot(x,y)
+runOneRep <- function(selection, nPheno, nDH, varE, Ne){#
+	n_gp<-nPheno/2#
+  founderPop<-runMacs2(nInd=nInd,nChr=nChr,segSites=segSites,Ne=Ne,bp=bp,genLen=1,inbred=TRUE,ploidy=Sporo_ploidy, returnCommand = FALSE, nThreads = NULL)#
+  # Founder Pop should be here#
+  SP<-SimParam$new(founderPop)#
+  SP$addTraitA(nQtlPerChr=nQtlPerChr, mean=mean_Trait,var=var_Trait,corA=NULL)#
+  SP$addSnpChip(nSnpPerChr=nSnpPerChr)#
+  SP$setGender("yes_sys")#
+  SP$setTrackRec(TRUE)#
+  pop <- newPop(founderPop, simParam=SP)#
+  pop<-setPheno(pop,varE=varE,simParam=SP)#
+  genMean=meanG(pop)#
+  generation<- vector(length=(cycles+1),mode="list")#
+  generation[[1]]<-pop   ### cycle 0, founder pop#
+  GP0_DH<-makeDH(generation[[1]],nDH=nDH0,simParam=SP)  ### Twice GPs available for making SPs	#
+  GP0_DH_all<-pullQtlGeno(GP0_DH,simParam=SP)	#
+  dim(GP0_DH_all)#
+  GS<-NULL#
+  GEBV<-NULL#
+  Sporo<-NULL#
+  Sporo_s<-NULL#
+  GP_DH<-NULL#
+  for (j in 1:cycles){ #
+    if (j<=2){#
+      ## Year 2, the same scheme as in Year 1#
+      ## Randomly select 200 as female, then randomly select another 200 as male#
+      females<-selectInd(pop=GP0_DH,gender="F",nInd=n_gp,trait=1,use="rand",simParam=SP)#
+      males<-selectInd(pop=GP0_DH,gender="M",nInd=n_gp,trait=1,use="rand",simParam=SP)	#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]	  					 #
+      GP_M_2<-GP_M[sample(length(GP_M))] 					 #
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create 400 Spj#
+      Spj<-makeCross(GP0_DH,crossPlan=crossPlan,simParam=SP)#
+      Spj<-setPheno(Spj,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Spj)  ### This is a list now#
+      ## Select amongst Spj#
+      #Spj_s<-Sel(Sporo[[j]])#
+      Spj_s<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Spj_s)#
+      ## Make GP DH using Sporo_s#
+      GP_DHj<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)	### !!!#
+      GP_DH<-c(GP_DH,GP_DHj)#
+      print(j)#
+    } else if (j>2) {#
+      print (j)#
+      TP_j<-mergePops(Sporo)  #
+      GS_j<-RRBLUP(TP_j,traits=1,simParam=SP)  ### TP only has info from 1:(j-1)#
+      ## GEBVs on GP(y-2)s#
+      GEBV_j<-setEBV(GP_DH[[j-1]],GS_j,simParam=SP)  ### Use the GP_DH 1 years ago#
+      females<-selectInd(pop=GEBV_j,gender="F",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      males<-selectInd(pop=GEBV_j,gender="M",nInd=n_gp,selectTop=TRUE,trait=1,use="ebv",simParam=SP)#
+      GP_F<-row.names(pullQtlGeno(females,simParam=SP))#
+      GP_M<-row.names(pullQtlGeno(males,simParam=SP))#
+      GP_F_2<-GP_F[sample(length(GP_F))]#
+      GP_M_2<-GP_M[sample(length(GP_M))]#
+      GP_Fs<-c(GP_F,GP_F_2)#
+      GP_Ms<-c(GP_M,GP_M_2)#
+      crossPlan<-cbind(GP_Fs,GP_Ms)#
+      ## Cross to create Sporo_j#
+      Sporo_j<-makeCross(GEBV_j,crossPlan=crossPlan,simParam=SP)#
+      Sporo_j<-setPheno(Sporo_j,varE=varE,simParam=SP)#
+      Sporo<-c(Sporo,Sporo_j)#
+      ## Select amongst Sporoy #
+      Sporo_js<-selectInd(Sporo[[j]],nInd=nPheno*0.1,trait=1,use=selection,simParam=SP)#
+      Sporo_s<-c(Sporo_s,Sporo_js)#
+      ## Make GP_DH_j using Sporo_s#
+      GP_DH_j<-makeDH(Sporo_s[[j]],nDH=nDH,simParam=SP)#
+      GP_DH<-c(GP_DH,GP_DH_j)#
+      print(j)   #
+    }#
+    mean_g1<-unlist(lapply(Sporo,meanG))#
+    sd_g1<-sqrt(unlist(lapply(Sporo,varG)))#
+  }      #
+  return(list(mean_g1=mean_g1, sd_g1=sd_g1))#
+}#END runOneRep
+cycles=7#
+#
+test<-runOneRep(selection="pheno", nPheno=400, nDH=25, varE=1.22, Ne=60)
+x<-c(1:7)
+plot(x,test$mean_g1)
+3*300
+3*300/60
+300*2/3
+200*2
+400*4
+1600/60
+200*4/60
+18.31-10.75
+3785/500
+307-213/213
+(307-213)/213
+12.62/38.9
+95*5
+95*5/60
+95*2
+41985+69-1
+61+91
+152+55
+93+126
+154/248
+91/248
+90/248
+67/248
+62/248
+97+27
+124/248
+194/2
+780-42.45
+17.7+49.49+40.62
+132-95
+95*2
+190-132
+97+16
+113/248
+(97+18)/248
+67/248
+97+18
+67/248
+62/248
+190/2
+95/24
+190/44
+150+44
+234.39-241.44/241.44
+(234.39-241.44)/241.44
+13.24*2
+9.32*2
+96-51
+58-45
+98.5*10
+0.985*10
+(1-0.985)*10
+150G
+0.15*10
+95*2
+800/190
+2026.48+1492.18+(1612.48/2)
+672.18+747.82
+1964-198
+1964-196
+747.82+672.18-177.80-503.63
+747.82+672.18
+80140-31064-33090
+4.4*2
+4.4*2+4.44+9.2+54+30+(96/4)+(57.6/2)+3*3
+4.4*2+4.44+9.2+54+(30/2)+(96/4)+(57.6/2)+3*3
+96/4
+24/6
+30/2
+15/4
+57.6/2
+28.8/5.8
+4.9655*2
+(28.8/5.8)*2+(54/2)
+28.8/5.5
+28.8/5.6
+0.025*5
+27/18
+26-5+1
+3335/22
+3336/1.2
+2780*0.2
+556/22
+796/4
+1850/4
+1320+160
+370*4
+94+127-1
+setwd("/Users/maohuang/Desktop/Kelp/2020_2019_Phenotypic_Data/")
+load("hMat_PedNH_CCmat_fndrMrkData.rdata")
+setwd("/Users/maohuang/Desktop/Kelp/2020_2019_Phenotypic_Data/Phenotypic_Analysis")
+load("hMat_PedNH_CCmat_fndrMrkData.rdata")
+ls()
+dim(bipha)
+dim(biphasicPedNH)
+head(biphasicPedNH)
+head(biphasicCCmat)
+dim(biphasicCCmat)
+biphasicCCmat[1120:1121,1120:1121]
+ls()
+dim(fndrMrkData)
+fndrMrkData[1:5,1:6]
+fndrMrkData[1:5,1:3]
+ls()
+dim(hMat)
+hMat[1:5,1:5]
+hMat[1120:1121,1120:1121]
+biphasicCCmat[1120:1121,1120:1121]
+ls()
+din(fndrMrkData)
+dim(fndrMrkData)
+fndrMrkData[1:4,1:6]
+2019-1999

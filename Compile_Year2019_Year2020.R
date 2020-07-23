@@ -4,14 +4,14 @@ setwd("/Users/maohuang/Desktop/Kelp/2020_2019_Phenotypic_Data/")
 Yr2020<-read.csv("Plot_2020 Phenotyping Datasheet_07142020Download.csv",sep=",",header=TRUE)
 head(Yr2020)
 colnames(Yr2020)
-colnames(Yr2020)<-c("plotNo", "crossID","femaPar", "femaParLoc", "malePar", "maleParLoc", "Crosses","PlantingDens","Development","line", "position","block", "PhotoScore","Year", "wetWgtPlot", "lengthPlot",  "wetWgtPerM", "percDryWgt","dryWgtPerM","densityBladesPerM")
+colnames(Yr2020)<-c("plotNo", "crossID","femaPar", "femaParLoc", "malePar", "maleParLoc", "Crosses","PlantingDens","development","line", "position","block", "PhotoScore","Year", "wetWgtPlot", "lengthPlot",  "wetWgtPerM", "percDryWgt","dryWgtPerM","densityBlades")
 
 Yr2019<-read.csv("Plot_2019_NH Phenotyping Data_0714Download.csv",sep=",",header=TRUE)
 colnames(Yr2019)
 head(Yr2019)
 
 length(colnames(Yr2020)) #20
-colnames(Yr2019)[1:20]<-c("plotNo", "crossID","femaPar", "femaParLoc", "malePar", "maleParLoc", "Crosses","Development","PlantingDens","line", "position","block", "PhotoScore","Year", "wetWgtPlot", "lengthPlot",  "percDryWgt","wetWgtPerM", "dryWgtPerM","densityBladesPerM")
+colnames(Yr2019)[1:20]<-c("plotNo", "crossID","femaPar", "femaParLoc", "malePar", "maleParLoc", "Crosses","development","PlantingDens","line", "position","block", "PhotoScore","Year", "wetWgtPlot", "lengthPlot",  "percDryWgt","wetWgtPerM", "dryWgtPerM","densityBlades")
 
 Yr2019Sub<-Yr2019[,colnames(Yr2019)%in%colnames(Yr2020)]
   dim(Yr2019Sub)
