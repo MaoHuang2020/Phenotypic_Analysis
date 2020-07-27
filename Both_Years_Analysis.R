@@ -3,12 +3,23 @@
 ###################################
 # Plot information analysis
 ###################################
+
+
+plot(dataNHpiBoth_C[dataNHpiBoth_C$Year==2019,]$densityBlades~dataNHpiBoth_C[dataNHpiBoth_C$Year==2019,]$dryWgtPerM)
+
+
+setwd("/Users/maohuang/Desktop/Kelp/2020_2019_Phenotypic_Data/Phenotypic_Analysis")
 library(rrBLUP)
 
 rm(list=ls())
 load("dataNHpi_withChk_3_sets.rdata")
+
 load("dataNHim_withChk_3_sets.rdata")
 
+ls()
+head(dataNHpiBoth_C)
+
+colMeans(dataNHpiBoth_C[dataNHpiBoth_C$PhotoScore>1,20:26],na.rm=TRUE)
 
 ### !!!!
 dataNHpi<-dataNHpiBoth_C  
