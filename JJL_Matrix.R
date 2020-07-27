@@ -73,7 +73,9 @@ dataNHpi<-dataNHpi[dataNHpi$Region=="GOM",] ## !!! RM SNE, 530 rows
     
 dataNHpi<-dataNHpi[!dataNHpi$crossID=="Buffer",]  ## !!! RMed Buffer lines
 
-dataNHpi<-dataNHpi[!dataNHpi$PhotoScore==0,] ## !!! RM PhotoScore=0,  447 rows
+#dataNHpi<-dataNHpi[!dataNHpi$PhotoScore==0,] ## !!! RM PhotoScore=0,  447 rows
+dataNHpi<-dataNHpi[dataNHpi$PhotoScore>1,] ## !!! RM PhotoScore=0,  447 rows
+
   dim(dataNHpi)
   colnames(dataNHpi)
 
@@ -89,7 +91,7 @@ dataNHpiBoth_C<-dataNHpi  ## Order plotNo alphabetically
 dataNHpiBoth_C<-dataNHpiBoth_C[order(dataNHpiBoth_C$plotNo),] ## Order plotNo alphabetically
 
 
-save(dataNHpi19_C,dataNHpi20_C,dataNHpiBoth_C,file="dataNHpi_withChk_3_sets.rdata")
+save(dataNHpi19_C,dataNHpi20_C,dataNHpiBoth_C,file="dataNHpi_withChk_3_sets_PhotoScore23.rdata")
 
 ## RM checks
 dataNHpi19<-dataNHpi19[!dataNHpi19$crossID=="Check",]  
@@ -124,7 +126,7 @@ kelpNameColumns <- kelpNameColumns[kelpNameColumns[,1] != "",]   #### ? Is this 
 biphasicPedNH <- makeBiphasicPed(kelpNameColumns, rownames(mrkRelMat)) #### Ensure One has 18 in the name, the other also does
   head(kelpNameColumns)
   head(rownames(mrkRelMat))
-  write.csv(biphasicPedNH,paste0("biphasicPedNHBoth_",yr,".csv") ) 
+  write.csv(biphasicPedNH,paste0("biphasicPedNHBoth_",yr,"_PhotoScore23.csv") ) 
         
 # 2.Calculate the relationship matrix
 source("calcCCmatrixBiphasic.R")
@@ -146,7 +148,7 @@ nSp <- length(spRows)
   length(fndRows)+length(gpRows)+length(spRows)
 hMat <- calcHmatrix(mrkRelMat, aMat, aMatFounders=rownames(mrkRelMat))
 
-save(mrkRelMat,aMat,hMat,biphasicPedNH,biphasicCCmat,fndrMrkData, file=paste0("hMat_PedNH_CCmat_fndrMrkData_",yr,".rdata"))  ###### !!!!!!!
+save(mrkRelMat,aMat,hMat,biphasicPedNH,biphasicCCmat,fndrMrkData, file=paste0("hMat_PedNH_CCmat_fndrMrkData_",yr,"_PhotoScore23.rdata"))  ###### !!!!!!!
 
 
 
@@ -180,7 +182,7 @@ dataNHimboth_C<-dataNHimboth_C[order(dataNHimboth_C$plotNo),]
 
 
 
-save(dataNHim19_C,dataNHim20_C,dataNHimboth_C,file="dataNHim_withChk_3_sets.rdata")
+save(dataNHim19_C,dataNHim20_C,dataNHimboth_C,file="dataNHim_withChk_3_sets_PhotoScore23.rdata")
 
 
 

@@ -5,21 +5,21 @@
 ###################################
 
 
-plot(dataNHpiBoth_C[dataNHpiBoth_C$Year==2019,]$densityBlades~dataNHpiBoth_C[dataNHpiBoth_C$Year==2019,]$dryWgtPerM)
+#plot(dataNHpiBoth_C[dataNHpiBoth_C$Year==2019,]$densityBlades~dataNHpiBoth_C[dataNHpiBoth_C$Year==2019,]$dryWgtPerM)
 
 
 setwd("/Users/maohuang/Desktop/Kelp/2020_2019_Phenotypic_Data/Phenotypic_Analysis")
 library(rrBLUP)
 
 rm(list=ls())
-load("dataNHpi_withChk_3_sets.rdata")
+load("dataNHpi_withChk_3_sets_PhotoScore23.rdata")
 
-load("dataNHim_withChk_3_sets.rdata")
+load("dataNHim_withChk_3_sets_PhotoScore23.rdata")
 
 ls()
 head(dataNHpiBoth_C)
 
-colMeans(dataNHpiBoth_C[dataNHpiBoth_C$PhotoScore>1,20:26],na.rm=TRUE)
+#colMeans(dataNHpiBoth_C[dataNHpiBoth_C$PhotoScore>1,20:26],na.rm=TRUE) ### !!!! USE PHOTO SCORE 2 & 3 !
 
 ### !!!!
 dataNHpi<-dataNHpiBoth_C  
@@ -27,7 +27,7 @@ dataNHim<-dataNHimboth_C
 yr<-"Both"
 
 
-load(paste0("hMat_PedNH_CCmat_fndrMrkData_",yr,".rdata"))
+load(paste0("hMat_PedNH_CCmat_fndrMrkData_",yr,"_PhotoScore23.rdata"))
   dim(dataNHpi)
   dim(hMat)
   tail(dataNHpi)  
@@ -109,10 +109,13 @@ h2naive <- c(heritability(msOutDB1), heritability(msOutWWP1), heritability(msOut
 names(h2naive) <- c("densityBlades", "wetWgtPlot", "dryWgtPerM", "percDryWgt")
   round(h2naive,3)
   
-#densityBlades    wetWgtPlot    dryWgtPerM    percDryWgt 
+# ONLY PhotoScore1,2,3 
+  #densityBlades    wetWgtPlot    dryWgtPerM    percDryWgt 
  # 0.117         0.470         0.468         0.022  
 
-  
+  #BothYears PhotoScore23
+  #densityBlades    wetWgtPlot    dryWgtPerM    percDryWgt 
+  #0.198         0.476         0.410         0.045 
   
 # Heritability conditional on blade density using pedigree-based relationship
 # Density Blades covariate
@@ -138,6 +141,10 @@ names(h2covar) <- c("wetWgtPlot", "dryWgtPerM", "percDryWgt")
 
   #wetWgtPlot dryWgtPerM percDryWgt 
   #0.368      0.376      0.000
+  
+  #BothYears PhotoScore23  
+  #wetWgtPlot dryWgtPerM percDryWgt 
+  #0.309      0.297      0.006 
 
 #msXdb <- model.matrix( ~ densityBlades + line%in%Year+block%in%Year+Year + popChk, data=dataNHpi) ### !!!! Change???
 ### 3. Add in the Density Blades covariate component, BUT using H matrix:
@@ -151,6 +158,10 @@ names(h2hMat) <- c("wetWgtPlot", "dryWgtPerM", "percDryWgt")
   
 #wetWgtPlot dryWgtPerM percDryWgt 
 #0.368      0.378      0.000 
+  
+#BothYears PhotoScore23
+  #wetWgtPlot dryWgtPerM percDryWgt 
+#  0.336      0.319      0.015 
   
 ### 4. Add in only the GrowDays covariate components, using H matrix:---- This is confounded with Year
 # msX4 <- model.matrix( ~ GrowDays + line%in%Year+block%in%Year+Year + popChk, data=dataNHpi) ### !!!! Change???
@@ -223,13 +234,26 @@ names(h2hMat) <- c("wetWgtPlot", "dryWgtPerM", "percDryWgt")
   # wetWgtPlot    dryWgtPerM    percDryWgt densityBlades  paintSPdevel 
   # 0.470         0.468         0.008         0.134         0.257 
   
+  #BOthYear_PhotoScore23
+  #wetWgtPlot    dryWgtPerM    percDryWgt densityBlades  paintSPdevel 
+  #0.336         0.319         0.015         0.209         0.416 
   
   
+########### 6. FINALE !! RUN Model WITHOUT blade density as covariate, but use hMat as the relationship matrx
   
+  msX <- model.matrix( ~ line%in%Year+block%in%Year+Year+popChk, data=dataNHpi)  ### !!!! nested effects???? DID NOT give the full Ranks of X
+  msX <- msX[, apply(msX, 2, function(v) !all(v == 0))]  
+  msOutDBh <- mixed.solve(y=dataNHpi$densityBlades, Z=msZ, K=hMat, X=msX, SE=T)
+  msOutWWPh <- mixed.solve(y=log(dataNHpi$wetWgtPlot+1), Z=msZ, K=hMat, X=msX, SE=T)
+  msOutDWPMh <- mixed.solve(y=log(dataNHpi$dryWgtPerM+1), Z=msZ, K=hMat, X=msX, SE=T)
+  msOutPDWh <- mixed.solve(y=dataNHpi$percDryWgt, Z=msZ, K=hMat, X=msX, SE=T)
   
+  h2hMat6 <- c(heritability(msOutWWPh), heritability(msOutDWPMh), heritability(msOutPDWh),heritability(msOutDBh))
+  names(h2hMat6) <- c("wetWgtPlot", "dryWgtPerM", "percDryWgt","densityBladesPerM")
+  round(h2hMat6,3) 
   
-  
-  
+ #    wetWgtPlot        dryWgtPerM        percDryWgt densityBladesPerM 
+ # 0.506             0.440             0.041             0.209  
   
   
   
