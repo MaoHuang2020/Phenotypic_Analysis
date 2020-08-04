@@ -43,9 +43,10 @@ Crossed<-as.vector(CrossedSP$Crossed)
   str(Crossed)
 gl6.m2<-gl6.m[rownames(gl6.m)%in%Crossed,]
   dim(gl6.m2)
-  write.csv(geno$taxa,"Crossed_genotyped_Dart1.csv")
 
 load("FarmCPU_GAPIT.Rdata")
+#write.csv(geno2$taxa,"Fndr_Crossed_genotyped_Dart1.csv")
+
 geno2<-geno[,-1]
 rownames(geno2)<-geno$taxa
   geno2[1:5,1:6]
@@ -55,15 +56,15 @@ geno2[geno2==0]=-1
 geno2[geno2==1]=0
 geno2[geno2==2]=1
 
-write.csv(rownames(geno2),"genotyped_FilteredSNPset.csv")
+write.csv(rownames(geno2),"Fndrs_genotyped_Samples.csv")
 fndrMrkData<-geno2
 mrkRelMat <- A.mat(fndrMrkData, impute.method="EM", return.imputed=T)
 fndrMrkDataImp <- mrkRelMat$imputed
 mrkRelMat <- mrkRelMat$A
   dim(mrkRelMat)  #125 x 125
-  write.csv(rownames(mrkRelMat),"Samples_used_in_Amat.csv")
+write.csv(rownames(mrkRelMat),"Fndrs_used_in_Amat.csv")
   
-########################### Plot
+########################### A. Plot
 dataNHpi <-read.csv("dataNHpi_ManuallyAddGrowth_07202020.csv",sep=",",header=TRUE)
 dataNHpi <- dataNHpi[order(dataNHpi$plotNo),]  #### Plots in alphabetic order
 
@@ -74,7 +75,7 @@ dataNHpi<-dataNHpi[dataNHpi$Region=="GOM",] ## !!! RM SNE, 530 rows
 dataNHpi<-dataNHpi[!dataNHpi$crossID=="Buffer",]  ## !!! RMed Buffer lines
 
 #dataNHpi<-dataNHpi[!dataNHpi$PhotoScore==0,] ## !!! RM PhotoScore=0,  447 rows
-dataNHpi<-dataNHpi[dataNHpi$PhotoScore>1,] ## !!! RM PhotoScore=0,  447 rows
+dataNHpi<-dataNHpi[dataNHpi$PhotoScore>1,] ## !!! RM PhotoScore<1
 
   dim(dataNHpi)
   colnames(dataNHpi)
@@ -83,7 +84,7 @@ dataNHpi19<-dataNHpi[dataNHpi$Year==2019,] ## 2019 data   !!!!!!
 dataNHpi19_C<-dataNHpi19
 dataNHpi19_C<-dataNHpi19_C[order(dataNHpi19_C$plotNo),]  ## Order plotNo alphabetically
 
-dataNHpi20<-dataNHpi[dataNHpi$Year==2020,]  
+dataNHpi20<-dataNHpi[dataNHpi$Year==2020,]   #
 dataNHpi20_C<-dataNHpi20
 dataNHpi20_C<-dataNHpi20_C[order(dataNHpi20_C$plotNo),]  ## Order plotNo alphabetically
 
@@ -93,15 +94,16 @@ dataNHpiBoth_C<-dataNHpiBoth_C[order(dataNHpiBoth_C$plotNo),] ## Order plotNo al
 
 save(dataNHpi19_C,dataNHpi20_C,dataNHpiBoth_C,file="dataNHpi_withChk_3_sets_PhotoScore23.rdata")
 
-## RM checks
+## RM checks to make the pedigree-biphasic matrix and CC-matrix
 dataNHpi19<-dataNHpi19[!dataNHpi19$crossID=="Check",]  
 dataNHpi20<-dataNHpi20[!dataNHpi20$crossID=="Check",]  
 dataNHpiBoth<-dataNHpi[!dataNHpi$crossID=="Check",]
 
-  dim(dataNHpi19) # 170
-  dim(dataNHpi20)  #237
-  dim(dataNHpiBoth)  #407
+  dim(dataNHpi19) #122
+  dim(dataNHpi20)  #128
+  dim(dataNHpiBoth)  #250
 
+######################################################################  
 ### Make pedigree relationship matrix  !!!!!!!!!! RUN 3 TIMES !!!!!! 
 
 #1. Create the pedigree
@@ -119,20 +121,22 @@ dataNHpi<-dataNHpiBoth ########## !!!!!
 yr<-"Both"
 
 
-dataNHpi<-dataNHpi[order(dataNHpi$plotNo),]  ### Order plots alphabetically
+dataNHpi<-dataNHpi[order(dataNHpi$plotNo),]  ### Order plots alphabetically, so that order match that in making the Z matrix
 kelpNameColumns <- dataNHpi[, c("femaPar", "malePar")]
 kelpNameColumns <- kelpNameColumns[kelpNameColumns[,1] != "",]   #### ? Is this removing the Checks?
 
-biphasicPedNH <- makeBiphasicPed(kelpNameColumns, rownames(mrkRelMat)) #### Ensure One has 18 in the name, the other also does
+biphasicPedNH <- makeBiphasicPed(kelpNameColumns, rownames(mrkRelMat)) #### The rownames(mrkRelMat) is to put the fndrs in the front in the pedigree matrix
   head(kelpNameColumns)
   head(rownames(mrkRelMat))
-  write.csv(biphasicPedNH,paste0("biphasicPedNHBoth_",yr,"_PhotoScore23.csv") ) 
-        
+write.csv(biphasicPedNH,paste0("biphasicPedNHBoth_",yr,"_PhotoScore23.csv") ) 
+      
+
 # 2.Calculate the relationship matrix
 source("calcCCmatrixBiphasic.R")
 biphasicCCmat <- calcCCmatrixBiphasic(biphasicPedNH)
 
 rownames(biphasicCCmat) <- colnames(biphasicCCmat) <- rownames(biphasicPedNH)
+
 
 # 3. Combine the marker- with the pedigree- relationship matrix to make H matrix
 aMat <- 2 * biphasicCCmat
@@ -142,17 +146,17 @@ gpRows <- which(apply(biphasicPedNH[,2:3], 1, function(vec) is.na(vec[2])))   ##
 spRows <- which(apply(biphasicPedNH[,2:3], 1, function(vec) all(vec > 0)))    ### Progeny sps, col 2 and 3 are all values
 nSp <- length(spRows)
 
-  length(fndRows) # 157
-  length(gpRows) #296
-  length(spRows) #447
-  length(fndRows)+length(gpRows)+length(spRows)
+  length(fndRows) # 142; 147; 148
+  length(gpRows) #99; 156; 227
+  length(spRows) #122; 128; 250
+  length(fndRows)+length(gpRows)+length(spRows) #363; 431; 625
 hMat <- calcHmatrix(mrkRelMat, aMat, aMatFounders=rownames(mrkRelMat))
 
 save(mrkRelMat,aMat,hMat,biphasicPedNH,biphasicCCmat,fndrMrkData, file=paste0("hMat_PedNH_CCmat_fndrMrkData_",yr,"_PhotoScore23.rdata"))  ###### !!!!!!!
 
 
 
-##### Individual
+############# B. Individual
 dataNHim <- read.csv("Indi_2019_2020_Compile_07202020_Edit.csv",sep=",",header=TRUE)
   dim(dataNHim)
   str(dataNHim)
@@ -165,7 +169,7 @@ dataNHim<-dataNHim[!dataNHim$crossID=="Buffer",]
   dim(dataNHim) #4996
 
 dataNHim19_C<-dataNHim[dataNHim$Year==2019,] 
-dataNHim19_C<-dataNHim19_C[order(dataNHim19_C$plotNo),]  ### Plots in Alphabetic order
+dataNHim19_C<-dataNHim19_C[order(dataNHim19_C$plotNo),]  ### Plots in Alphabetic order; Here the plot did not RM plots with photoScore < 2,3
   dim(dataNHim19_C)  # 2800 x 12
   tail(dataNHim19_C)
 
@@ -182,7 +186,8 @@ dataNHimboth_C<-dataNHimboth_C[order(dataNHimboth_C$plotNo),]
 
 
 
-save(dataNHim19_C,dataNHim20_C,dataNHimboth_C,file="dataNHim_withChk_3_sets_PhotoScore23.rdata")
+save(dataNHim19_C,dataNHim20_C,dataNHimboth_C,file="dataNHim_withChk_3_sets_PhotoScore0123.rdata")
+#### !!!! This individual dataset still HAS the photoscore < 2,3 plots
 
 
 
