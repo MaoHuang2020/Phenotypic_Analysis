@@ -65,7 +65,7 @@ mrkRelMat <- mrkRelMat$A
 write.csv(rownames(mrkRelMat),"Fndrs_used_in_Amat.csv")
   
 ########################### A. Plot
-dataNHpi <-read.csv("dataNHpi_ManuallyAddGrowth_07202020.csv",sep=",",header=TRUE)
+dataNHpi <-read.csv("dataNHpi_ManuallyAddGrowth_07202020.csv",sep=",",header=TRUE) ##!!!
 dataNHpi <- dataNHpi[order(dataNHpi$plotNo),]  #### Plots in alphabetic order
 
   dim(dataNHpi)
