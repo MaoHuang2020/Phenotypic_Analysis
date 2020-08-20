@@ -22,6 +22,8 @@ yr<-"2020"
 
 load(paste0("hMat_PedNH_CCmat_fndrMrkData_",yr,"_PhotoScore23.rdata"))
 
+dataNHpi$Crosses<-as.factor(as.character(dataNHpi$Crosses))
+
 ### Need to order them in numeric order
 #dataNHpi<-dataNHpi[order(dataNHpi$plotNo),]
 #dataNHim<-dataNHim[order(dataNHim$plotNo),] 
@@ -95,13 +97,29 @@ msX <- msX[, apply(msX, 2, function(v) !all(v == 0))]
   
   dim(msX)
   colnames(msX)
-msZ <- rbind(cbind(matrix(0, nSp, nrow(aMat) - nSp), diag(nSp)), matrix(0, nrow(dataNHpi) - nSp, nrow(aMat)))
+
+##！！！！！ TBD  
+  
+  
+dataNHpi_RMchk<-dataNHpi[!dataNHpi$crossID=="Check",]
+dataNHpi_RMchk$Crosses<-as.factor(as.character(dataNHpi_RMchk$Crosses)) # This RMed the check levels
+
+### Order the Crosses in the order of those in aMat, starting row,col length(fndRows)+length(gpRows) 
+
+
+nSpMat<-model.matrix( ~ -1+Crosses,data=dataNHpi_RMchk)  # No intercept; sorted inside the 
+  dim(nSpMat)
+    
 rownames(msZ)<-dataNHpi$plotNo
   dim(msZ)
   dim(dataNHpi)
 
 write.csv(dataNHpi,paste0("dataNHpi_Last_Used_in_Model_",yr,".csv"))
-  
+ 
+
+
+
+ 
 msOutDBh <- mixed.solve(y=dataNHpi$densityBlades, Z=msZ, K=hMat, X=msX, SE=T)
 msOutWWPh <- mixed.solve(y=log(dataNHpi$wetWgtPlot+1), Z=msZ, K=hMat, X=msX, SE=T)
 msOutDWPMh <- mixed.solve(y=log(dataNHpi$dryWgtPerM+1), Z=msZ, K=hMat, X=msX, SE=T)

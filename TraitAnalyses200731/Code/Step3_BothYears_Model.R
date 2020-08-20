@@ -5,9 +5,7 @@
 
 #plot(dataNHpiBoth_C[dataNHpiBoth_C$Year==2019,]$densityBlades~dataNHpiBoth_C[dataNHpiBoth_C$Year==2019,]$dryWgtPerM)
 
-setwd("/Users/maohuang/Desktop/Kelp/2020_2019_Phenotypic_Data/Phenotypic_Analysis")
 library(rrBLUP)
-
 rm(list=ls())
 load("dataNHpi_withChk_3_sets_PhotoScore23.rdata")
 
@@ -86,21 +84,53 @@ msX <- msX[, apply(msX, 2, function(v) !all(v == 0))]
 # Z has dimensions nrow(dataNHpi) x ncol(aMat)
 # the first part all 0s, diag() identity matrix
 
-dim(msX)
-colnames(msX)
-msZ <- rbind(cbind(matrix(0, nSp, nrow(aMat) - nSp), diag(nSp)), matrix(0, nrow(dataNHpi) - nSp, nrow(aMat)))
-
-###???
-# msZ<-model.matrix( ~ spGeneticIdentity,data=dataNHpi)
 # modify msZ to add the checks
 # two same cross for a different plot would be having 
 
+dim(msX)
+colnames(msX)
 
+### aMat has fndr+GP+ all the plot SPs in it.
+### sort 
+  dim(dataNHpi_RMchk)
+  str(dataNHpi_RMchk)
+  
+dataNHpi_RMchk<-dataNHpi[!dataNHpi$crossID=="Check",] # Subset without chk levels
+dataNHpi_RMchk$Crosses<-as.factor(as.character(dataNHpi_RMchk$Crosses)) # This RMed the check levels
+  
+nrowplot<-nrow(dataNHpi_RMchk)
+nrowchk<-nrow(dataNHpi) - nrowplot
+
+## 1. fndrs and GPs
+fndr_GPMat<-matrix(0, nrowplot, nrow(aMat) - nSp)
+  dim(fndr_GPMat)
+
+## 2. plot level Sps
+nSpMat<-model.matrix( ~ -1+Crosses,data=dataNHpi_RMchk)  # No intercept; sorted inside the 
+  dim(nSpMat)
+colnames(nSpMat)<-str_replace(colnames(nSpMat),"Crosses","")  
+
+### the Crosses in nSpMat,make them the same order as those crosses in aMat
+nSpMat<-nSpMat[,colnames(hMat[,(ncol(fndr_GPMat)+1):ncol(hMat)])]
+
+## 3. chks rows  
+chkSpMat<-matrix(0, nrowchk, nrow(aMat))
+  dim(chkSpMat)  
+
+## 4. make msZ
+msZ <- rbind(cbind(fndr_GPMat,nSpMat),chkSpMat )
+  dim(msZ)
+  dim(aMat)
+  
+  which(msZ[19,]==1) #325
+  which(msZ[129,]==1) #325
+  hMat[325:326,325:326]
 
 # Calculate heritability from the mixed.solve output
 heritability <- function(msOut){
   return(msOut$Vu / (msOut$Vu + msOut$Ve))
 }
+
 
 ########### 6. FINALE !! RUN Model WITHOUT blade density as covariate, but use hMat as the relationship matrx
 write.csv(dataNHpi,paste0("dataNHpi_Last_Used_in_Model_",yr,".csv"))
@@ -118,7 +148,8 @@ names(h2hMat) <- c("wetWgtPlot", "dryWgtPerM", "percDryWgt","densityBladesPerM")
 
 #    wetWgtPlot        dryWgtPerM        percDryWgt densityBladesPerM 
 # 0.506             0.440             0.041             0.209  
-
+ # wetWgtPlot        dryWgtPerM        percDryWgt densityBladesPerM 
+  #0.502             0.437             0.044             0.205 
 
 ############# Individual
   for (col in c( "Year", "plotNo")) 
@@ -131,11 +162,7 @@ names(h2hMat) <- c("wetWgtPlot", "dryWgtPerM", "percDryWgt","densityBladesPerM")
   for (col in c("bladeLength", "bladeMaxWidth", "bladeThickness", "stipeLength", "stipeDiameter"))  
     dataNHim[,col] <- as.numeric(dataNHim[,col])
   
-  #### dataNHim order of plotNo needs to be the same as that in dataNHpi, They were sorted alphabetically before saving to the rdata object
-  ################## MH add this
-  ####  str(dataNHim)  
-  
-  #### dataNHim2<-dataNHim[order(dataNHim$Order_In_Plot),]
+  #### dataNHim of plotNo needs to be the same as that in dataNHpi, They were sorted alphabetically before saving to the rdata object
   ################## the order of plot in msXim/dataNHim matter $$$$
   
   # Complicated by the fact that there are no data for some im plots
@@ -259,32 +286,16 @@ names(h2hMat) <- c("wetWgtPlot", "dryWgtPerM", "percDryWgt","densityBladesPerM")
   plot(allBLUPsDF$PDW[releaseGP], allBLUPsDF$DWpM[releaseGP], pch=16, cex=0.8, ylab="Dry weight per meter", xlab="Percent dry weight", main="Gametophytes", cex.lab=1.3)
   dev.off()
   
-  allBLUPsDF <- cbind(pedigree=allBLUPsDF$pedigree, index=2*allBLUPsDF$DWpM + allBLUPsDF$PDW, allBLUPsDF[,-1]) #Reorder cols
+  allBLUPsDF <- cbind(pedigree=allBLUPsDF$pedigree, index=2*allBLUPsDF$DWpM + allBLUPsDF$PDW, allBLUPsDF[,-1]) #Re
+  cols
   saveRDS(allBLUPsDF, file=paste0("allBLUPsDF_analyzeNH_",yr,"_PhotoScore23.rds"))
   
   write.csv(allBLUPsDF,paste0("allBLUPs_DF_",yr,".csv"))
   
   
-  
-  ### THIS DOES NOT WORK 
-  # # Add gametophyte sex as a column to the dataframe
-  # getGPsex <- function(gpName){
-  #   sexNum <- strsplit(gpName, "-")[[1]][4]
-  #   sex <- substring(sexNum, 1, 1)
-  #   return(ifelse(sex %in% c("F", "M"), sex, NA))
-  # }
-  # gpSex <- sapply(rownames(allBLUPsDF), getGPsex)  ### Apply to the list
-  # gpSex
-  
-  # A selection index for sporophytes and gametophytes that weights DWpM twice as high as PDW
-  ### THIS DOES NOT WORK 
-  #allBLUPsDF <- cbind(pedigree=allBLUPsDF$pedigree, gpSex=gpSex, index=2*allBLUPsDF$DWpM + allBLUPsDF$PDW, allBLUPsDF[,-1]) #Reorder cols
-  
-
-  
   # Best sporophytes
   nTop<-20  ### Pick the top 20
-  bestSP_DWpM <- allBLUPsDF[progenySP,][order(allBLUPsDF$DWpM[progenySP], decreasing=T)[1:nTop],] # Order based on DWpM
+  bestSP_DWpM <- allBLUPsDF[progenySP,][order(allBLUPsDF$DWpM[progenySP], decreasing=T)[1:nTop],] # based on DWpM
   bestSP_DWpM[,-(1:2)] <- bestSP_DWpM[,-(1:2)] %>% round(3) # Only keep the numeric part
   write.table(bestSP_DWpM, paste0("BestSPbyDryWgtPerM_",yr,"_PhotoScore23.txt"), quote=F, row.names=T, col.names=T)
   
@@ -301,16 +312,3 @@ names(h2hMat) <- c("wetWgtPlot", "dryWgtPerM", "percDryWgt","densityBladesPerM")
   write.table(bestGP_idx[,-1], paste0("BestGPbyDWpMandPDW_",yr,"_PhotoScore23.txt"), quote=F, row.names=T, col.names=T)
   
   
-  ### THIS DOES NOT WORK 
-  # Ordered female and male gametophytes
-  # temp <- allBLUPsDF[allBLUPsDF$gpSex%in%"F",-(1:2)]  ### The F and M is levels, so cannot use "=="
-  # temp <- temp[order(temp$DWpM, decreasing=T),] %>% round(3)
-  # write.table(temp, paste0("FemaleGP_OrderedByDryWgtPerM_",yr,".txt"), quote=F, row.names=T, col.names=T)
-  # 
-  # temp <- allBLUPsDF[allBLUPsDF$gpSex%in%"M",-(1:2)]
-  # temp <- temp[order(temp$DWpM, decreasing=T),] %>% round(3)
-  # write.table(temp, paste0("MaleGP_OrderedByDryWgtPerM_",yr,".txt"), quote=F, row.names=T, col.names=T)
-  
-  
-  
-

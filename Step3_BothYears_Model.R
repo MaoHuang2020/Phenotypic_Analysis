@@ -90,6 +90,13 @@ dim(msX)
 colnames(msX)
 msZ <- rbind(cbind(matrix(0, nSp, nrow(aMat) - nSp), diag(nSp)), matrix(0, nrow(dataNHpi) - nSp, nrow(aMat)))
 
+###???
+# msZ<-model.matrix( ~ spGeneticIdentity,data=dataNHpi)
+# modify msZ to add the checks
+# two same cross for a different plot would be having 
+
+
+
 # Calculate heritability from the mixed.solve output
 heritability <- function(msOut){
   return(msOut$Vu / (msOut$Vu + msOut$Ve))

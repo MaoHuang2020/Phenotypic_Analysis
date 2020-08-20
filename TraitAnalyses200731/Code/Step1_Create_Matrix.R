@@ -25,28 +25,37 @@
 
 rm(list=ls())
 ls()
-setwd("/Users/maohuang/Desktop/Kelp/2020_2019_Phenotypic_Data/Phenotypic_Analysis")
 library(magrittr)
 library(rrBLUP)
 
-### Marker Data
-load("Dart2_mNA0.1_nNA0.5_RMhwe0.01_Manual_gl6m_0206.Rdata")
-  ls()
-  dim(gl6.m)
-  gl6.m[1:5,1:6]
+# ### Marker Data
+# load("Dart2_mNA0.1_nNA0.5_RMhwe0.01_Manual_gl6m_0206.Rdata")
+# ### Add 18 to the genotyped founders
+# Genotypedname<-paste0(substring(rownames(gl6.m), first=1, last=2), "18", substring(rownames(gl6.m), first=3))
+# rownames(gl6.m)<-Genotypedname
+# 
+#   ls()
+#   dim(gl6.m)
+#   gl6.m[1:5,1:6]
+# 
+dataNHpi <-read.csv("dataNHpi_ManuallyAddGrowth_07202020.csv",sep=",",header=TRUE) ##!!!
+### RM "checks"
+dataNHpi_rmChk<-dataNHpi[!dataNHpi$crossID=="Check",]
 
-CrossedSP<-read.csv("Crossed_WildSP_2019_2020.csv",sep=",",header=TRUE)
+FMGPs<-unique(c(as.character(dataNHpi_rmChk$femaPar),as.character(dataNHpi_rmChk$malePar)))
+SPs<-strsplit(as.character(FMGPs), split="-", fixed=T)
+CrossedSP<-unique(sapply(SPs, function(vec) paste(vec[1:3], collapse="-"))) #93 of them
+
   head(CrossedSP)
-  dim(CrossedSP)
+  str(CrossedSP)
   tail(CrossedSP)
-Crossed<-as.vector(CrossedSP$Crossed)
-  str(Crossed)
-gl6.m2<-gl6.m[rownames(gl6.m)%in%Crossed,]
-  dim(gl6.m2)
+
+# gl6.m2<-gl6.m[rownames(gl6.m)%in%CrossedSP,]
+#   dim(gl6.m2)
 
 load("FarmCPU_GAPIT.Rdata")
 #write.csv(geno2$taxa,"Fndr_Crossed_genotyped_Dart1.csv")
-
+  ls()
 geno2<-geno[,-1]
 rownames(geno2)<-geno$taxa
   geno2[1:5,1:6]
@@ -56,13 +65,16 @@ geno2[geno2==0]=-1
 geno2[geno2==1]=0
 geno2[geno2==2]=1
 
-write.csv(rownames(geno2),"Fndrs_genotyped_Samples.csv")
+geno2<-geno2[rownames(geno2)%in%CrossedSP,]  # 93 fnders made crosses, only 56 were genotyped
+  
+
+#write.csv(rownames(geno2),"Fndrs_genotyped_Samples.csv")
 fndrMrkData<-geno2
 mrkRelMat <- A.mat(fndrMrkData, impute.method="EM", return.imputed=T)
 fndrMrkDataImp <- mrkRelMat$imputed
 mrkRelMat <- mrkRelMat$A
-  dim(mrkRelMat)  #125 x 125
-write.csv(rownames(mrkRelMat),"Fndrs_used_in_Amat.csv")
+  dim(mrkRelMat)  #56 x 56
+#write.csv(rownames(mrkRelMat),"Fndrs_used_in_Amat.csv")
   
 ########################### A. Plot
 dataNHpi <-read.csv("dataNHpi_ManuallyAddGrowth_07202020.csv",sep=",",header=TRUE) ##!!!
@@ -121,9 +133,19 @@ dataNHpi<-dataNHpiBoth ########## !!!!!
 yr<-"Both"
 
 
+dataNHpi$Crosses<-as.factor(as.character(dataNHpi$Crosses))
+dataNHpi$femaPar<-as.character(dataNHpi$femaPar)
+dataNHpi$malePar<-as.character(dataNHpi$malePar)
+
 dataNHpi<-dataNHpi[order(dataNHpi$plotNo),]  ### Order plots alphabetically, so that order match that in making the Z matrix
+
 kelpNameColumns <- dataNHpi[, c("femaPar", "malePar")]
 kelpNameColumns <- kelpNameColumns[kelpNameColumns[,1] != "",]   #### ? Is this removing the Checks?
+
+### Need to remove the femaPar x malePar that's the same cross
+kelpNameColumns$RM<-paste0(kelpNameColumns[,1],"x",kelpNameColumns[,2])
+kelpNameColumns<-kelpNameColumns[!duplicated(kelpNameColumns$RM),]
+kelpNameColumns<-kelpNameColumns[,-3]
 
 biphasicPedNH <- makeBiphasicPed(kelpNameColumns, rownames(mrkRelMat)) #### The rownames(mrkRelMat) is to put the fndrs in the front in the pedigree matrix
   head(kelpNameColumns)
@@ -146,10 +168,10 @@ gpRows <- which(apply(biphasicPedNH[,2:3], 1, function(vec) is.na(vec[2])))   ##
 spRows <- which(apply(biphasicPedNH[,2:3], 1, function(vec) all(vec > 0)))    ### Progeny sps, col 2 and 3 are all values
 nSp <- length(spRows)
 
-  length(fndRows) # 142; 147; 148
+  length(fndRows) # 73; 78; 79
   length(gpRows) #99; 156; 227
-  length(spRows) #122; 128; 250
-  length(fndRows)+length(gpRows)+length(spRows) #363; 431; 625
+  length(spRows) #122; 127; 244
+  length(fndRows)+length(gpRows)+length(spRows) #294; 361; 550
 hMat <- calcHmatrix(mrkRelMat, aMat, aMatFounders=rownames(mrkRelMat))
 
 save(mrkRelMat,aMat,hMat,biphasicPedNH,biphasicCCmat,fndrMrkData, file=paste0("hMat_PedNH_CCmat_fndrMrkData_",yr,"_PhotoScore23.rdata"))  ###### !!!!!!!
